@@ -30,6 +30,21 @@ app.get("/getData",(req,res)=>{
 })
 
 
+app.get("/article/:Id",(req,res)=>{
+    const {Id} = req.params;
+    const data = loadData()
+    data.forEach((article)=>{
+    if(article.id==Id){
+       return res
+       .status(200)
+       .json(article)
+    }
+    })
+})
+
+
+
+
 
 app.listen(PORT,()=>{
     console.log(`server is listening on port http://localhost:${PORT}`)
