@@ -30,7 +30,12 @@ try {
         return []
 }
 }
- 
+
+const SaveData = (articles)=>{
+    const data = JSON.stringify(articles)
+    fs.writeFileSync(filePath,data)
+}
+
 
 app.get("/getData",(req,res)=>{
     res
@@ -52,7 +57,9 @@ const middleAuth = basicAuth({
 
 app.get("/article/:Id",(req,res)=>{
     const {Id} = req.params;
+    if(!Id) return res.status(404).send("Id is required")
     const data = loadData()
+    if(!data) return res.status(404).send([])
     data.forEach((article)=>{
     if(article.id==Id){
        return res
@@ -64,19 +71,81 @@ app.get("/article/:Id",(req,res)=>{
 
 
 //middleware 
-app.use("/auth",middleAuth)
+app.use("/admin",middleAuth)
 
 // app.get("/admin",(req,res)=>{
 //     res.status(200).send("HELLO THIS IS DASHBOARD")
 // })
 
-app.get("/auth/admin",(req,res)=>{
+app.get("/admin",(req,res)=>{
      console.log("clicked")
      res
     .status(200)
     .send(loadData())
 })
 
+
+app.delete("/admin/delete/:Id",(req,res)=>{
+  const {Id} = req.params;
+  if(!Id) return res.status(404).send("Id is required")
+  const articles =loadData()  
+  const newArr = articles.filter((article)=> article.id!=Id)
+  SaveData(newArr)
+  return res
+  .status(200)
+  .send(`Article ${Id} deleted successfully`)
+ 
+  })
+
+
+app.patch("/admin/update/:Id",(req,res)=>{
+    const {Id} = req.params;
+    console.log(Id )
+    const {title,content} = req.body
+    if(!Id) return res.status(404).send("Id is required")
+    const articles = loadData()
+     const newArr = articles.map((article)=>{
+      if(article.id==Id){
+          article.title = title
+          article.date=new Date()
+          article.body = content
+
+      }
+      return article
+  })
+  
+   SaveData(newArr)
+   return res
+   .status(201)
+   .send("Item updated successfully")
+ 
+
+})
+
+
+///add new article
+app.post("/admin/new",(req,res)=>{
+  const {title,content} = req.body
+  const data = loadData()
+  //query the  last id in db 
+  const Id = data.at(-1).id+1;
+    // if(data.length>0) data[data.length-1].id+1     
+     
+  const article ={
+    id:Id,
+    title:title,
+    date:new Date(),
+    body:content
+  }  
+  data.push(article)
+  SaveData(data)
+
+   return res
+   .status(201)
+   .send("article addedd successfully")
+  
+
+})
 
 
 
