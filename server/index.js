@@ -73,9 +73,6 @@ app.get("/article/:Id",(req,res)=>{
 //middleware 
 app.use("/admin",middleAuth)
 
-// app.get("/admin",(req,res)=>{
-//     res.status(200).send("HELLO THIS IS DASHBOARD")
-// })
 
 app.get("/admin",(req,res)=>{
      console.log("clicked")
@@ -153,4 +150,3 @@ app.post("/admin/new",(req,res)=>{
 app.listen(PORT,()=>{
     console.log(`server is listening on port http://localhost:${PORT}`)
 })
-
