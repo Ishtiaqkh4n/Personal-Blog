@@ -216,4 +216,4 @@ This project is inspired by the roadmap.sh backend projects collection.
 
 
 
-[1]: https://roadmap.sh/projects/personal-blog?utm_source=chatgpt.com "Personal Blog Project Idea"
+[1]: https://roadmap.sh/projects/personal-blog   "Personal Blog Project Idea"
